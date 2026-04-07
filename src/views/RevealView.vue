@@ -50,14 +50,29 @@ return this.words[this.currentIndex] || ""
 }
 },
 
+// 🔥 AJOUT IMPORTANT
+watch:{
+'$route'(){
+this.resetGame()
+}
+},
+
 methods:{
 
+// 🔥 RESET COMPLET
+resetGame(){
+this.currentIndex = 0
+this.flipped = false
+this.generateWords()
+},
+
 async generateWords(){
+
+console.log("API appelée")
 
 this.loading = true
 
 const themes = ["animaux","films","villes","anime","nourriture"]
-
 const theme = themes[Math.floor(Math.random()*themes.length)]
 
 try {
@@ -71,6 +86,8 @@ body: JSON.stringify({ theme })
 })
 
 const data = await response.json()
+
+console.log("Mots IA :", data)
 
 const normal = data.normal || "chat"
 const undercover = data.undercover || "chien"
@@ -87,10 +104,15 @@ undercoverIndexes.push(r)
 }
 }
 
-let mrWhiteIndex = useMrWhite 
-? Math.floor(Math.random()*this.players.length)
-: -1
+// 🔥 éviter que Mr White soit aussi undercover
+let mrWhiteIndex = -1
+if(useMrWhite){
+do{
+mrWhiteIndex = Math.floor(Math.random()*this.players.length)
+}while(undercoverIndexes.includes(mrWhiteIndex))
+}
 
+// distribution
 this.words = this.players.map((p,i)=>{
 
 if(i === mrWhiteIndex) return "Mr White"

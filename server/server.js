@@ -1,62 +1,97 @@
 const express = require("express")
 const cors = require("cors")
 require("dotenv").config()
-const OpenAI = require("openai")
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-const openai = new OpenAI({
-apiKey: process.env.OPENAI_API_KEY
-})
+const API_KEY = process.env.GEMINI_API_KEY
 
-// ROUTE IA
+// 🔥 fetch compatible
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
+
+// 🔥 fallback
+const fallbackWords = [
+{normal:"chat", undercover:"chien"},
+{normal:"lion", undercover:"tigre"},
+{normal:"pomme", undercover:"poire"},
+{normal:"paris", undercover:"londres"},
+{normal:"coca", undercover:"pepsi"},
+{normal:"naruto", undercover:"luffy"}
+]
+
 app.post("/generate-word", async (req, res) => {
 
 const { theme } = req.body
 
 try {
 
-const completion = await openai.chat.completions.create({
-model: "gpt-4.1-mini",
-messages: [
+console.log("Requête Gemini avec thème :", theme)
+
+// ✅ MODÈLE CORRIGÉ
+const response = await fetch(
+`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
 {
-role: "system",
-content: "Répond uniquement en JSON : {\"normal\":\"mot\",\"undercover\":\"mot proche\"}"
+method: "POST",
+headers: {
+"Content-Type": "application/json"
 },
+body: JSON.stringify({
+contents: [
 {
-role: "user",
-content: `Donne un mot normal et un mot undercover sur le thème : ${theme}`
+parts: [
+{
+text: `Donne 2 mots proches sur le thème "${theme}".
+Répond UNIQUEMENT en JSON :
+{"normal":"mot","undercover":"mot proche"}`
+}
+]
 }
 ]
 })
+}
+)
 
-const text = completion.choices[0].message.content
+const data = await response.json()
 
-// 🔥 transformation JSON sécurisée
-let data
+console.log("Réponse Gemini complète :", data)
+
+// 🔥 sécurité
+if(!data.candidates || !data.candidates[0]){
+throw new Error("Pas de réponse Gemini")
+}
+
+const text = data.candidates[0].content.parts[0].text
+
+console.log("Texte IA :", text)
+
+// 🔥 nettoyage
+const cleaned = text.replace(/```json|```/g, "").trim()
+
+let result
 
 try {
-data = JSON.parse(text)
+result = JSON.parse(cleaned)
 } catch {
-data = { normal: "chat", undercover: "chien" }
+throw new Error("JSON invalide")
 }
 
 res.json({
-normal: data.normal,
-undercover: data.undercover
+normal: result.normal,
+undercover: result.undercover
 })
 
 } catch (error) {
 
-console.error("Erreur OpenAI:", error)
+console.log("⚠️ Erreur Gemini → fallback :", error.message)
 
-// fallback
+const random = fallbackWords[Math.floor(Math.random()*fallbackWords.length)]
+
 res.json({
-normal: "chat",
-undercover: "chien"
+normal: random.normal,
+undercover: random.undercover
 })
 
 }
@@ -64,5 +99,5 @@ undercover: "chien"
 })
 
 app.listen(3000, () => {
-console.log("✅ Serveur lancé sur http://localhost:3000")
+console.log("✅ Serveur Gemini lancé sur http://localhost:3000")
 })

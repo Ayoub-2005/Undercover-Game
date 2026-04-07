@@ -30,8 +30,9 @@ export default{
 
 methods:{
 
+// 🔥 IMPORTANT : force recharge
 restart(){
-this.$router.push("/reveal")
+window.location.href = "/reveal"
 },
 
 goLobby(){
