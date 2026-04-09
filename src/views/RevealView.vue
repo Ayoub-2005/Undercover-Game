@@ -1,6 +1,5 @@
 <template>
-
-<div>
+<div class="container">
 
 <h2>Révélation</h2>
 
@@ -8,15 +7,33 @@
 
 <div v-if="!loading">
 
-<h3>{{ currentPlayer }}</h3>
+<!-- 🔥 NOM DU JOUEUR -->
+<h3 class="player-name">
+{{ currentPlayer }}
+</h3>
 
-<div @click="flipCard">
+<!-- 🎴 CARTE -->
+<div 
+class="card" 
+:class="{ flipped: flipped }"
+@click="flipCard"
+>
 
-<p v-if="!flipped">Clique</p>
-<p v-if="flipped">{{ currentWord }}</p>
+<div class="card-inner">
+
+<div class="card-front">
+Clique pour voir
+</div>
+
+<div class="card-back">
+{{ currentWord }}
+</div>
 
 </div>
 
+</div>
+
+<!-- 🔥 BOUTON -->
 <button v-if="flipped" @click="next">
 Suivant
 </button>
@@ -24,7 +41,6 @@ Suivant
 </div>
 
 </div>
-
 </template>
 
 <script>

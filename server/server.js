@@ -7,19 +7,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const API_KEY = process.env.GEMINI_API_KEY
-
-// 🔥 fetch compatible
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 
-// 🔥 fallback
+// 🔥 fallback (sécurité)
 const fallbackWords = [
 {normal:"chat", undercover:"chien"},
 {normal:"lion", undercover:"tigre"},
-{normal:"pomme", undercover:"poire"},
-{normal:"paris", undercover:"londres"},
-{normal:"coca", undercover:"pepsi"},
-{normal:"naruto", undercover:"luffy"}
+{normal:"pizza", undercover:"burger"},
+{normal:"Paris", undercover:"Londres"},
+{normal:"Naruto", undercover:"Sasuke"}
 ]
 
 app.post("/generate-word", async (req, res) => {
@@ -28,44 +24,41 @@ const { theme } = req.body
 
 try {
 
-console.log("Requête Gemini avec thème :", theme)
+console.log("Appel IA avec thème :", theme)
 
-// ✅ MODÈLE CORRIGÉ
-const response = await fetch(
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
-{
+const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
 method: "POST",
 headers: {
+"Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
 "Content-Type": "application/json"
 },
 body: JSON.stringify({
-contents: [
+model: "openai/gpt-3.5-turbo",
+messages: [
 {
-parts: [
+role: "system",
+content: "Tu génères des mots pour un jeu Undercover."
+},
 {
-text: `Donne 2 mots proches sur le thème "${theme}".
+role: "user",
+content: `Donne 2 mots proches mais différents sur le thème "${theme}".
 Répond UNIQUEMENT en JSON :
 {"normal":"mot","undercover":"mot proche"}`
 }
 ]
-}
-]
 })
-}
-)
+})
 
 const data = await response.json()
 
-console.log("Réponse Gemini complète :", data)
+console.log("Réponse IA :", data)
 
 // 🔥 sécurité
-if(!data.candidates || !data.candidates[0]){
-throw new Error("Pas de réponse Gemini")
+if(!data.choices || !data.choices[0]){
+throw new Error("Pas de réponse IA")
 }
 
-const text = data.candidates[0].content.parts[0].text
-
-console.log("Texte IA :", text)
+const text = data.choices[0].message.content
 
 // 🔥 nettoyage
 const cleaned = text.replace(/```json|```/g, "").trim()
@@ -85,7 +78,7 @@ undercover: result.undercover
 
 } catch (error) {
 
-console.log("⚠️ Erreur Gemini → fallback :", error.message)
+console.log("⚠️ Erreur IA → fallback :", error.message)
 
 const random = fallbackWords[Math.floor(Math.random()*fallbackWords.length)]
 
@@ -99,5 +92,5 @@ undercover: random.undercover
 })
 
 app.listen(3000, () => {
-console.log("✅ Serveur Gemini lancé sur http://localhost:3000")
+console.log("✅ Serveur IA (OpenRouter) lancé sur http://localhost:3000")
 })

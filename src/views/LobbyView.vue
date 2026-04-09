@@ -19,7 +19,7 @@
 <br><br>
 
 <button @click="$router.push('/settings')">
-Paramètres
+⚙️ Paramètres
 </button>
 
 </div>
