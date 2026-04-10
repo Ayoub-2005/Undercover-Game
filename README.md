@@ -1,62 +1,34 @@
-# 🎮 Undercover Game
+# 🎮 Undercover Game (Vue.js)
 
-## 📌 Description
+Un jeu interactif inspiré du célèbre jeu **Undercover**, développé avec **Vue.js**.
 
-Undercover Game est une application web interactive développée en Vue.js permettant de jouer au célèbre jeu "Undercover".
-
-Chaque joueur reçoit un mot secret :
-
-* La majorité des joueurs ont le même mot (les "normaux")
-* Un ou plusieurs joueurs ont un mot légèrement différent (les "Undercover")
-* Un joueur peut être "Mr White" (il n’a aucun mot)
-
-Le but est de trouver les Undercover grâce à des indices… sans se faire démasquer !
+Chaque joueur reçoit un mot secret… sauf un 👀
+Saurez-vous le démasquer ?
 
 ---
 
 ## 🚀 Fonctionnalités
 
-* 👥 Création de partie avec plusieurs joueurs
-* 🎴 Distribution aléatoire et sécurisée des mots
-* 🤖 Génération dynamique des mots via une API IA
-* 🎭 Gestion des rôles :
+* 👥 Ajout de joueurs
+* 🎴 Distribution aléatoire des mots
+* 🤖 Génération dynamique avec une API IA
+* 🎭 Rôles :
 
   * Joueurs normaux
   * Undercover (configurable)
   * Mr White (optionnel)
-* ⚙️ Paramétrage du jeu :
-
-  * Nombre d’Undercover
-  * Activation de Mr White
-* 🔄 Relancer une partie facilement
-* 💾 Sauvegarde des joueurs (localStorage)
-* 🎨 Interface moderne avec animations (flip card)
+* ⚙️ Paramétrage du jeu
+* 🔄 Relancer une partie
+* 💾 Sauvegarde des joueurs
+* 🎨 Interface moderne avec animation des cartes
 
 ---
 
-## 🛠️ Technologies utilisées
-
-### Frontend
-
-* HTML / CSS
-* JavaScript
-* Vue.js (Vite)
-
-### Backend
-
-* Node.js
-* Express
-
-### IA
-
-* API OpenRouter (modèle GPT)
-* Génération dynamique de mots
+## 📦 Installation complète (Mode d’emploi)
 
 ---
 
-## 📦 Installation du projet
-
-### 1️⃣ Cloner le projet
+### 🔹 1. Cloner le projet
 
 ```bash
 git clone https://github.com/TON-USERNAME/Undercover-Game.git
@@ -65,7 +37,7 @@ cd Undercover-Game
 
 ---
 
-### 2️⃣ Installer les dépendances
+### 🔹 2. Installer les dépendances
 
 #### Frontend
 
@@ -82,19 +54,19 @@ npm install
 
 ---
 
-### 3️⃣ Configurer l’API IA
+### 🔹 3. Configurer l’API IA
 
-Créer un fichier `.env` dans le dossier `/server` :
+Créer un fichier `.env` dans le dossier `server` :
 
 ```env
 OPENROUTER_API_KEY=TA_CLE_API
 ```
 
-👉 Obtenir une clé gratuite sur : https://openrouter.ai
+👉 Tu peux obtenir une clé gratuite sur : https://openrouter.ai
 
 ---
 
-### 4️⃣ Lancer le projet
+### 🔹 4. Lancer le projet
 
 #### Backend
 
@@ -111,29 +83,38 @@ npm run dev
 
 ---
 
-## 🎮 Utilisation
+### 🔹 5. Accéder au jeu
 
-1. Ajouter les joueurs dans le lobby
-2. Configurer les paramètres (Undercover / Mr White)
-3. Lancer la partie
-4. Chaque joueur découvre son mot
-5. Phase orale :
+Ouvre ton navigateur :
 
-   * Indices (3 tours)
-   * Débat
-   * Vote
-6. Relancer une nouvelle partie ou modifier les joueurs
+```
+http://localhost:5173/
+```
+
+---
+
+## 🎮 Utilisation du jeu
+
+1. Ajouter les joueurs
+2. Aller dans les paramètres
+3. Choisir :
+
+   * nombre d’Undercover
+   * activer Mr White
+4. Lancer la partie
+5. Chaque joueur découvre son mot
+6. Phase orale :
+
+   * indices
+   * débat
+   * vote
+7. Relancer une partie
 
 ---
 
 ## 🧠 Fonctionnement de l’IA
 
-L’application utilise une API IA pour générer :
-
-* Un mot "normal"
-* Un mot "undercover" proche
-
-Exemple :
+L’application utilise une API pour générer :
 
 ```json
 {
@@ -142,50 +123,89 @@ Exemple :
 }
 ```
 
-Un système de fallback est prévu en cas d’erreur API.
+👉 Les mots :
+
+* changent à chaque partie
+* sont du même thème
+* évitent les répétitions
 
 ---
 
-## 🧪 Tests (à venir)
+## 🧪 Tests unitaires
 
-Des tests unitaires seront ajoutés pour :
+Des tests ont été ajoutés avec **Vitest** pour vérifier les règles du jeu.
 
-* Vérifier le nombre minimum de joueurs
-* Valider le nombre d’Undercover
-* Tester la présence de Mr White
-* Vérifier la distribution des rôles
+### 🔍 Ce qui est testé
 
----
-
-## 📈 Améliorations possibles
-
-* Ajout de sons (flip card)
-* Mode multijoueur en ligne
-* Chat intégré
-* Timer pour les tours
-* Score des joueurs
+* Minimum 3 joueurs
+* Nombre d’Undercover valide
+* Gestion de Mr White
+* Distribution des rôles
 
 ---
 
-## 🎓 Contexte
+### ▶️ Lancer les tests
 
-Projet réalisé dans le cadre du BTS SIO SLAM.
+Depuis la racine du projet :
 
-Objectifs :
-
-* Développer une application web complète
-* Utiliser une API externe (IA)
-* Implémenter une logique métier
-* Concevoir une interface utilisateur moderne
+```bash
+npx vitest
+```
 
 ---
 
-## 👨‍💻 Auteur
+## 📁 Structure du projet
 
-Projet réalisé par : Ayoub
+```
+src/
+├── views/
+├── components/
+├── utils/
+│   └── gameRules.js
+├── tests/
+│   └── game.test.js
+```
 
 ---
 
-## 📜 Licence
+## 🛠️ Technologies utilisées
 
-Projet personnel à but pédagogique.
+* Vue.js ⚡
+* Node.js 🟢
+* Express 🚀
+* API OpenRouter 🤖
+* Vitest 🧪
+
+---
+
+## 📌 Auteur
+
+Projet réalisé par **Ayoub**
+
+---
+
+## ⭐ Améliorations possibles
+
+* 🔊 Sons
+* ⏱️ Timer
+* 🏆 Score
+* 🌐 Mode multijoueur
+
+---
+
+## 🚀 Lancer rapidement
+
+```bash
+git clone https://github.com/TON-USERNAME/Undercover-Game.git
+cd Undercover-Game
+npm install
+cd server
+npm install
+node server.js
+cd ..
+npm run dev
+```
+
+---
+
+🎉 Amuse-toi bien !
