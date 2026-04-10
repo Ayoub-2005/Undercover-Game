@@ -1,10 +1,15 @@
 <template>
-<div>
-<h1>🎮 Undercover Game</h1>
-<router-view />
-</div>
-</template>
+  <div class="app">
 
-<script>
-export default {}
-</script>
+    <!-- 🔥 HEADER -->
+    <header class="header">
+      <h1>🎮 Undercover Game</h1>
+    </header>
+
+    <!-- 🔥 CONTENU -->
+    <main class="main">
+      <router-view />
+    </main>
+
+  </div>
+</template>

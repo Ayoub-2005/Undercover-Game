@@ -1,45 +1,44 @@
 <template>
-<div class="container">
+<div class="page">
+  <div class="game-box">
+  
 
-<h2>Révélation</h2>
+    <h2>Révélation</h2>
 
-<p v-if="loading">Chargement...</p>
+    <p v-if="loading">Chargement...</p>
 
-<div v-if="!loading">
+    <div v-if="!loading && currentIndex < players.length">
 
-<!-- 🔥 NOM DU JOUEUR -->
-<h3 class="player-name">
-{{ currentPlayer }}
-</h3>
-
-<!-- 🎴 CARTE -->
-<div 
-class="card" 
-:class="{ flipped: flipped }"
-@click="flipCard"
+      <h3 class="player-name">
+        {{ currentPlayer }}
+      </h3>
+      
+      <div 
+  class="card" 
+  :class="{ flipped: flipped }"
+  :key="currentIndex"
+  @click="flipCard"
 >
+        <div class="card-inner">
 
-<div class="card-inner">
+          <div class="card-front">
+            Clique pour voir
+          </div>
 
-<div class="card-front">
-Clique pour voir
-</div>
+          <div class="card-back">
+            {{ currentWord }}
+          </div>
 
-<div class="card-back">
-{{ currentWord }}
-</div>
+        </div>
+      </div>
 
-</div>
+      <button v-if="flipped" @click="next">
+        Suivant
+      </button>
 
-</div>
+    </div>
 
-<!-- 🔥 BOUTON -->
-<button v-if="flipped" @click="next">
-Suivant
-</button>
-
-</div>
-
+  </div>
 </div>
 </template>
 
@@ -154,9 +153,10 @@ this.flipped = true
 
 next(){
 
-this.flipped = false
 this.currentIndex++
+this.flipped = false
 
+// 🔥 sécurité (évite bug affichage)
 if(this.currentIndex >= this.players.length){
 this.$router.push("/step")
 }

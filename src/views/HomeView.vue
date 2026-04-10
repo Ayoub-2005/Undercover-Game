@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="page">
 <h2>Accueil</h2>
 
 <button @click="$router.push('/settings')">

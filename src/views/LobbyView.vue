@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="page">
 
 <h2>Lobby</h2>
 

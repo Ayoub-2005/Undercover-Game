@@ -1,6 +1,6 @@
 <template>
 
-<div>
+<div class="page">
 
 <h2>Phase du jeu</h2>
 
